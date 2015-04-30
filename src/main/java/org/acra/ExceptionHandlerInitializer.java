@@ -9,10 +9,11 @@ package org.acra;
  * @see ErrorReporter#setExceptionHandlerInitializer(ExceptionHandlerInitializer)
  */
 public interface ExceptionHandlerInitializer {
-    /**
-     * Called before {@link ErrorReporter} handles the Exception.
-     * 
-     * @param reporter The {@link ErrorReporter} that will handle the exception
-     */
-    void initializeExceptionHandler(ErrorReporter reporter);
+	/**
+	 * Called before {@link ErrorReporter} handles the Exception.
+	 * 
+	 * @param reporter
+	 *            The {@link ErrorReporter} that will handle the exception
+	 */
+	void initializeExceptionHandler(ErrorReporter reporter);
 }

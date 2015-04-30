@@ -35,40 +35,44 @@ import android.content.Context;
  */
 class LogFileCollector {
 
-    /**
-     * Private constructor to prevent instantiation.
-     */
-    private LogFileCollector() {
-    };
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private LogFileCollector() {
+	};
 
-    /**
-     * Reads the last lines of a custom log file. The file name is assumed as
-     * located in the {@link Application#getFilesDir()} directory if it does not
-     * contain any path separator.
-     * 
-     * @param context
-     * @param fileName
-     * @param numberOfLines
-     * @return
-     * @throws IOException
-     */
-    public static String collectLogFile(Context context, String fileName, int numberOfLines) throws IOException {
-        final BoundedLinkedList<String> resultBuffer = new BoundedLinkedList<String>(numberOfLines);
-        final BufferedReader reader;
-        if (fileName.contains("/")) {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)), 1024);
-        } else {
-            reader = new BufferedReader(new InputStreamReader(context.openFileInput(fileName)), 1024);
-        }
-        try {
-            String line = reader.readLine();
-            while (line != null) {
-                resultBuffer.add(line + "\n");
-                line = reader.readLine();
-            }
-        } finally {
-            CollectorUtil.safeClose(reader);
-        }
-        return resultBuffer.toString();
-    }
+	/**
+	 * Reads the last lines of a custom log file. The file name is assumed as
+	 * located in the {@link Application#getFilesDir()} directory if it does not
+	 * contain any path separator.
+	 * 
+	 * @param context
+	 * @param fileName
+	 * @param numberOfLines
+	 * @return
+	 * @throws IOException
+	 */
+	public static String collectLogFile(Context context, String fileName,
+			int numberOfLines) throws IOException {
+		final BoundedLinkedList<String> resultBuffer = new BoundedLinkedList<String>(
+				numberOfLines);
+		final BufferedReader reader;
+		if (fileName.contains("/")) {
+			reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(fileName)), 1024);
+		} else {
+			reader = new BufferedReader(new InputStreamReader(
+					context.openFileInput(fileName)), 1024);
+		}
+		try {
+			String line = reader.readLine();
+			while (line != null) {
+				resultBuffer.add(line + "\n");
+				line = reader.readLine();
+			}
+		} finally {
+			CollectorUtil.safeClose(reader);
+		}
+		return resultBuffer.toString();
+	}
 }

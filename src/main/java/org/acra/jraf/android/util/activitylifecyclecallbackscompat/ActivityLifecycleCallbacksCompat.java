@@ -31,21 +31,23 @@ import android.os.Bundle;
 
 /**
  * Equivalent of {@link ActivityLifecycleCallbacks} to be used with
- * {@link ApplicationHelper#registerActivityLifecycleCallbacks(Application, ActivityLifecycleCallbacksCompat)} and
- * {@link ApplicationHelper#unregisterActivityLifecycleCallbacks(Application, ActivityLifecycleCallbacksCompat)}.
+ * {@link ApplicationHelper#registerActivityLifecycleCallbacks(Application, ActivityLifecycleCallbacksCompat)}
+ * and
+ * {@link ApplicationHelper#unregisterActivityLifecycleCallbacks(Application, ActivityLifecycleCallbacksCompat)}
+ * .
  */
 public interface ActivityLifecycleCallbacksCompat {
-    void onActivityCreated(Activity activity, Bundle savedInstanceState);
+	void onActivityCreated(Activity activity, Bundle savedInstanceState);
 
-    void onActivityStarted(Activity activity);
+	void onActivityStarted(Activity activity);
 
-    void onActivityResumed(Activity activity);
+	void onActivityResumed(Activity activity);
 
-    void onActivityPaused(Activity activity);
+	void onActivityPaused(Activity activity);
 
-    void onActivityStopped(Activity activity);
+	void onActivityStopped(Activity activity);
 
-    void onActivitySaveInstanceState(Activity activity, Bundle outState);
+	void onActivitySaveInstanceState(Activity activity, Bundle outState);
 
-    void onActivityDestroyed(Activity activity);
+	void onActivityDestroyed(Activity activity);
 }

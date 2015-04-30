@@ -16,6 +16,8 @@
 
 package org.acra.collector;
 
+import static org.acra.ACRA.LOG_TAG;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,8 +30,6 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.provider.Settings.System;
 
-import static org.acra.ACRA.LOG_TAG;
-
 /**
  * Helper to collect data from {@link System} and {@link Secure} Settings
  * classes.
@@ -39,123 +39,134 @@ import static org.acra.ACRA.LOG_TAG;
  */
 final class SettingsCollector {
 
-    /**
-     * Collect data from {@link android.provider.Settings.System}. This
-     * collector uses reflection to be sure to always get the most accurate data
-     * whatever Android API level it runs on.
-     * 
-     * @param ctx
-     *            Application context.
-     * @return A human readable String containing one key=value pair per line.
-     */
-    public static String collectSystemSettings(Context ctx) {
-        final StringBuilder result = new StringBuilder();
-        final Field[] keys = Settings.System.class.getFields();
-        for (final Field key : keys) {
-            // Avoid retrieving deprecated fields... it is useless, has an
-            // impact on perfs, and the system writes many warnings in the
-            // logcat.
-            if (!key.isAnnotationPresent(Deprecated.class) && key.getType() == String.class) {
-                try {
-                    final Object value = Settings.System.getString(ctx.getContentResolver(), (String) key.get(null));
-                    if (value != null) {
-                        result.append(key.getName()).append("=").append(value).append("\n");
-                    }
-                } catch (IllegalArgumentException e) {
-                    ACRA.log.w(LOG_TAG, "Error : ", e);
-                } catch (IllegalAccessException e) {
-                    ACRA.log.w(LOG_TAG, "Error : ", e);
-                }
-            }
-        }
+	/**
+	 * Collect data from {@link android.provider.Settings.System}. This
+	 * collector uses reflection to be sure to always get the most accurate data
+	 * whatever Android API level it runs on.
+	 * 
+	 * @param ctx
+	 *            Application context.
+	 * @return A human readable String containing one key=value pair per line.
+	 */
+	public static String collectSystemSettings(Context ctx) {
+		final StringBuilder result = new StringBuilder();
+		final Field[] keys = Settings.System.class.getFields();
+		for (final Field key : keys) {
+			// Avoid retrieving deprecated fields... it is useless, has an
+			// impact on perfs, and the system writes many warnings in the
+			// logcat.
+			if (!key.isAnnotationPresent(Deprecated.class)
+					&& key.getType() == String.class) {
+				try {
+					final Object value = Settings.System.getString(
+							ctx.getContentResolver(), (String) key.get(null));
+					if (value != null) {
+						result.append(key.getName()).append("=").append(value)
+								.append("\n");
+					}
+				} catch (IllegalArgumentException e) {
+					ACRA.log.w(LOG_TAG, "Error : ", e);
+				} catch (IllegalAccessException e) {
+					ACRA.log.w(LOG_TAG, "Error : ", e);
+				}
+			}
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 
-    /**
-     * Collect data from {@link android.provider.Settings.Secure}. This
-     * collector uses reflection to be sure to always get the most accurate data
-     * whatever Android API level it runs on.
-     * 
-     * @param ctx
-     *            Application context.
-     * @return A human readable String containing one key=value pair per line.
-     */
-    public static String collectSecureSettings(Context ctx) {
-        final StringBuilder result = new StringBuilder();
-        final Field[] keys = Settings.Secure.class.getFields();
-        for (final Field key : keys) {
-            if (!key.isAnnotationPresent(Deprecated.class) && key.getType() == String.class && isAuthorized(key)) {
-                try {
-                    final Object value = Settings.Secure.getString(ctx.getContentResolver(), (String) key.get(null));
-                    if (value != null) {
-                        result.append(key.getName()).append("=").append(value).append("\n");
-                    }
-                } catch (IllegalArgumentException e) {
-                    ACRA.log.w(LOG_TAG, "Error : ", e);
-                } catch (IllegalAccessException e) {
-                    ACRA.log.w(LOG_TAG, "Error : ", e);
-                }
-            }
-        }
+	/**
+	 * Collect data from {@link android.provider.Settings.Secure}. This
+	 * collector uses reflection to be sure to always get the most accurate data
+	 * whatever Android API level it runs on.
+	 * 
+	 * @param ctx
+	 *            Application context.
+	 * @return A human readable String containing one key=value pair per line.
+	 */
+	public static String collectSecureSettings(Context ctx) {
+		final StringBuilder result = new StringBuilder();
+		final Field[] keys = Settings.Secure.class.getFields();
+		for (final Field key : keys) {
+			if (!key.isAnnotationPresent(Deprecated.class)
+					&& key.getType() == String.class && isAuthorized(key)) {
+				try {
+					final Object value = Settings.Secure.getString(
+							ctx.getContentResolver(), (String) key.get(null));
+					if (value != null) {
+						result.append(key.getName()).append("=").append(value)
+								.append("\n");
+					}
+				} catch (IllegalArgumentException e) {
+					ACRA.log.w(LOG_TAG, "Error : ", e);
+				} catch (IllegalAccessException e) {
+					ACRA.log.w(LOG_TAG, "Error : ", e);
+				}
+			}
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 
-    /**
-     * Collect data from {@link android.provider.Settings.Global}. This
-     * collector uses reflection to be sure to always get the most accurate data
-     * whatever Android API level it runs on.
-     * 
-     * @param ctx
-     *            Application context.
-     * @return A human readable String containing one key=value pair per line.
-     */
-    public static String collectGlobalSettings(Context ctx) {
-        if (Compatibility.getAPILevel() < 17) {
-            return "";
-        }
+	/**
+	 * Collect data from {@link android.provider.Settings.Global}. This
+	 * collector uses reflection to be sure to always get the most accurate data
+	 * whatever Android API level it runs on.
+	 * 
+	 * @param ctx
+	 *            Application context.
+	 * @return A human readable String containing one key=value pair per line.
+	 */
+	public static String collectGlobalSettings(Context ctx) {
+		if (Compatibility.getAPILevel() < 17) {
+			return "";
+		}
 
-        final StringBuilder result = new StringBuilder();
-        try {
-            final Class<?> globalClass = Class.forName("android.provider.Settings$Global");
-            final Field[] keys = globalClass.getFields();
-            final Method getString = globalClass.getMethod("getString", ContentResolver.class, String.class);
-            for (final Field key : keys) {
-                if (!key.isAnnotationPresent(Deprecated.class) && key.getType() == String.class && isAuthorized(key)) {
-                    final Object value = getString.invoke(null, ctx.getContentResolver(), (String) key.get(null));
-                    if (value != null) {
-                        result.append(key.getName()).append("=").append(value).append("\n");
-                    }
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            ACRA.log.w(LOG_TAG, "Error : ", e);
-        } catch (IllegalAccessException e) {
-            ACRA.log.w(LOG_TAG, "Error : ", e);
-        } catch (ClassNotFoundException e) {
-            ACRA.log.w(LOG_TAG, "Error : ", e);
-        } catch (SecurityException e) {
-            ACRA.log.w(LOG_TAG, "Error : ", e);
-        } catch (NoSuchMethodException e) {
-            ACRA.log.w(LOG_TAG, "Error : ", e);
-        } catch (InvocationTargetException e) {
-            ACRA.log.w(LOG_TAG, "Error : ", e);
-        }
+		final StringBuilder result = new StringBuilder();
+		try {
+			final Class<?> globalClass = Class
+					.forName("android.provider.Settings$Global");
+			final Field[] keys = globalClass.getFields();
+			final Method getString = globalClass.getMethod("getString",
+					ContentResolver.class, String.class);
+			for (final Field key : keys) {
+				if (!key.isAnnotationPresent(Deprecated.class)
+						&& key.getType() == String.class && isAuthorized(key)) {
+					final Object value = getString.invoke(null,
+							ctx.getContentResolver(), (String) key.get(null));
+					if (value != null) {
+						result.append(key.getName()).append("=").append(value)
+								.append("\n");
+					}
+				}
+			}
+		} catch (IllegalArgumentException e) {
+			ACRA.log.w(LOG_TAG, "Error : ", e);
+		} catch (IllegalAccessException e) {
+			ACRA.log.w(LOG_TAG, "Error : ", e);
+		} catch (ClassNotFoundException e) {
+			ACRA.log.w(LOG_TAG, "Error : ", e);
+		} catch (SecurityException e) {
+			ACRA.log.w(LOG_TAG, "Error : ", e);
+		} catch (NoSuchMethodException e) {
+			ACRA.log.w(LOG_TAG, "Error : ", e);
+		} catch (InvocationTargetException e) {
+			ACRA.log.w(LOG_TAG, "Error : ", e);
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 
-    private static boolean isAuthorized(Field key) {
-        if (key == null || key.getName().startsWith("WIFI_AP")) {
-            return false;
-        }
-        for (String regex : ACRA.getConfig().excludeMatchingSettingsKeys()) {
-            if(key.getName().matches(regex)) {
-               return false; 
-            }
-        }
-        return true;
-    }
+	private static boolean isAuthorized(Field key) {
+		if (key == null || key.getName().startsWith("WIFI_AP")) {
+			return false;
+		}
+		for (String regex : ACRA.getConfig().excludeMatchingSettingsKeys()) {
+			if (key.getName().matches(regex)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

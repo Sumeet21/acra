@@ -25,34 +25,35 @@ import org.acra.util.JSONReportBuilder.JSONReportException;
 import org.json.JSONObject;
 
 /**
- * Stores a crash reports data with {@link org.acra.ReportField} enum values as keys.
- * This is basically the source of {@link Properties} adapted to extend an
+ * Stores a crash reports data with {@link org.acra.ReportField} enum values as
+ * keys. This is basically the source of {@link Properties} adapted to extend an
  * EnumMap instead of Hashtable and with a few tweaks to avoid losing crazy
  * amounts of android time in the generation of a date comment when storing to
  * file.
  */
 public final class CrashReportData extends EnumMap<ReportField, String> {
 
-    private static final long serialVersionUID = 4112578634029874840L;
+	private static final long serialVersionUID = 4112578634029874840L;
 
-    /**
-     * Constructs a new {@code Properties} object.
-     */
-    public CrashReportData() {
-        super(ReportField.class);
-    }
+	/**
+	 * Constructs a new {@code Properties} object.
+	 */
+	public CrashReportData() {
+		super(ReportField.class);
+	}
 
-    /**
-     * Returns the property with the specified name.
-     * 
-     * @param key the name of the property to find.
-     * @return the named property value, or {@code null} if it can't be found.
-     */
-    public String getProperty(ReportField key) {
-        return super.get(key);
-    }
+	/**
+	 * Returns the property with the specified name.
+	 * 
+	 * @param key
+	 *            the name of the property to find.
+	 * @return the named property value, or {@code null} if it can't be found.
+	 */
+	public String getProperty(ReportField key) {
+		return super.get(key);
+	}
 
-    public JSONObject toJSON() throws JSONReportException {
-        return JSONReportBuilder.buildJSONReport(this);
-    }
+	public JSONObject toJSON() throws JSONReportException {
+		return JSONReportBuilder.buildJSONReport(this);
+	}
 }

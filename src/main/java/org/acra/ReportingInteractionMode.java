@@ -28,26 +28,35 @@ package org.acra;
  * </ul>
  */
 public enum ReportingInteractionMode {
-    /**
-     * No interaction, reports are sent silently and a "Force close" dialog
-     * terminates the app.
-     */
-    SILENT,
-    /**
-     * A status bar notification is triggered when the application crashes, the
-     * Force close dialog is not displayed. When the user selects the
-     * notification, a dialog is displayed asking him if he is ok to send a
-     * report.
-     */
-    NOTIFICATION,
-    /**
-     * A simple Toast is triggered when the application crashes, the Force close
-     * dialog is not displayed.
-     */
-    TOAST,
-    /**
-     * Direct dialog: a report confirmation dialog is displayed right after the crash.
-     * Will replace {@link #NOTIFICATION} mode.
-     */
-    DIALOG
+	/**
+	 * No interaction, reports are sent silently and a "Force close" dialog
+	 * terminates the app.
+	 */
+	SILENT,
+	/**
+	 * A status bar notification is triggered when the application crashes, the
+	 * Force close dialog is not displayed. When the user selects the
+	 * notification, a dialog is displayed asking him if he is ok to send a
+	 * report.
+	 */
+	NOTIFICATION,
+	/**
+	 * A simple Toast is triggered when the application crashes, the Force close
+	 * dialog is not displayed.
+	 */
+	TOAST,
+	/**
+	 * Direct dialog: a report confirmation dialog is displayed right after the
+	 * crash. Will replace {@link #NOTIFICATION} mode.
+	 */
+	DIALOG,
+	/**
+	 * Direct dialog: a report confirmation dialog is displayed right after the
+	 * crash. and when user click on ok it will open default email client and
+	 * parse crash data Will replace {@link #NOTIFICATION} mode.
+	 * 
+	 * @Required resDialogTitle , resDialogText , mailTo @parameters in
+	 *           Apllication class
+	 */
+	DIALOG_EMAIL
 }

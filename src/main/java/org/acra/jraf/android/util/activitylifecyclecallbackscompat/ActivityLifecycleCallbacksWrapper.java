@@ -27,70 +27,72 @@ import android.app.Activity;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.os.Bundle;
 
-import java.util.concurrent.Callable;
-
 /**
- * Wraps an {@link ActivityLifecycleCallbacksCompat} into an {@link ActivityLifecycleCallbacks}.
+ * Wraps an {@link ActivityLifecycleCallbacksCompat} into an
+ * {@link ActivityLifecycleCallbacks}.
  */
-/* package */class ActivityLifecycleCallbacksWrapper implements ActivityLifecycleCallbacks {
-    private org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat mCallback;
+/* package */class ActivityLifecycleCallbacksWrapper implements
+		ActivityLifecycleCallbacks {
+	private org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat mCallback;
 
-    public ActivityLifecycleCallbacksWrapper(org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat callback) {
-        mCallback = callback;
-    }
+	public ActivityLifecycleCallbacksWrapper(
+			org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat callback) {
+		mCallback = callback;
+	}
 
-    @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        mCallback.onActivityCreated(activity, savedInstanceState);
-    }
+	@Override
+	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+		mCallback.onActivityCreated(activity, savedInstanceState);
+	}
 
-    @Override
-    public void onActivityStarted(Activity activity) {
-        mCallback.onActivityStarted(activity);
-    }
+	@Override
+	public void onActivityStarted(Activity activity) {
+		mCallback.onActivityStarted(activity);
+	}
 
-    @Override
-    public void onActivityResumed(Activity activity) {
-        mCallback.onActivityResumed(activity);
-    }
+	@Override
+	public void onActivityResumed(Activity activity) {
+		mCallback.onActivityResumed(activity);
+	}
 
-    @Override
-    public void onActivityPaused(Activity activity) {
-        mCallback.onActivityPaused(activity);
-    }
+	@Override
+	public void onActivityPaused(Activity activity) {
+		mCallback.onActivityPaused(activity);
+	}
 
-    @Override
-    public void onActivityStopped(Activity activity) {
-        mCallback.onActivityStopped(activity);
-    }
+	@Override
+	public void onActivityStopped(Activity activity) {
+		mCallback.onActivityStopped(activity);
+	}
 
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-        mCallback.onActivitySaveInstanceState(activity, outState);
-    }
+	@Override
+	public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+		mCallback.onActivitySaveInstanceState(activity, outState);
+	}
 
-    @Override
-    public void onActivityDestroyed(Activity activity) {
-        mCallback.onActivityDestroyed(activity);
-    }
+	@Override
+	public void onActivityDestroyed(Activity activity) {
+		mCallback.onActivityDestroyed(activity);
+	}
 
-    /**
-     * Compare the current wrapped callback with another object wrapped callback
-     */
-    @Override
-    public boolean equals(Object object) {
-        if( !(object instanceof ActivityLifecycleCallbacksWrapper) )
-            return false;
-        ActivityLifecycleCallbacksWrapper that = ( ActivityLifecycleCallbacksWrapper )object;
-        return null == mCallback ? null == that.mCallback : mCallback.equals( that.mCallback );
-    }
+	/**
+	 * Compare the current wrapped callback with another object wrapped callback
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof ActivityLifecycleCallbacksWrapper))
+			return false;
+		ActivityLifecycleCallbacksWrapper that = (ActivityLifecycleCallbacksWrapper) object;
+		return null == mCallback ? null == that.mCallback : mCallback
+				.equals(that.mCallback);
+	}
 
-    /**
-     *
-     * return wrapped callback object hashCode
-     */
-    @Override
-    public int hashCode() {
-        return null != mCallback ? mCallback.hashCode() : 0;
-    }
+	/**
+	 *
+	 * return wrapped callback object hashCode
+	 */
+	@Override
+	public int hashCode() {
+		return null != mCallback ? mCallback.hashCode() : 0;
+	}
 }

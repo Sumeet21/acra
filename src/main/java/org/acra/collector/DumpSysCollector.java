@@ -15,8 +15,7 @@
  */
 package org.acra.collector;
 
-import org.acra.ACRA;
-import org.acra.ACRAConstants;
+import static org.acra.ACRA.LOG_TAG;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +23,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.acra.ACRA.LOG_TAG;
+import org.acra.ACRA;
+import org.acra.ACRAConstants;
 
 /**
  * Collects results of the <code>dumpsys</code> command.
@@ -34,40 +34,44 @@ import static org.acra.ACRA.LOG_TAG;
  */
 final class DumpSysCollector {
 
-    /**
-     * Collect results of the <code>dumpsys meminfo</code> command restricted to
-     * this application process.
-     * 
-     * @return The execution result.
-     */
-    public static String collectMemInfo() {
+	/**
+	 * Collect results of the <code>dumpsys meminfo</code> command restricted to
+	 * this application process.
+	 * 
+	 * @return The execution result.
+	 */
+	public static String collectMemInfo() {
 
-        final StringBuilder meminfo = new StringBuilder();
+		final StringBuilder meminfo = new StringBuilder();
 		BufferedReader bufferedReader = null;
-        try {
-            final List<String> commandLine = new ArrayList<String>();
-            commandLine.add("dumpsys");
-            commandLine.add("meminfo");
-            commandLine.add(Integer.toString(android.os.Process.myPid()));
+		try {
+			final List<String> commandLine = new ArrayList<String>();
+			commandLine.add("dumpsys");
+			commandLine.add("meminfo");
+			commandLine.add(Integer.toString(android.os.Process.myPid()));
 
-            final Process process = Runtime.getRuntime().exec(commandLine.toArray(new String[commandLine.size()]));
-            bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()), ACRAConstants.DEFAULT_BUFFER_SIZE_IN_BYTES);
+			final Process process = Runtime.getRuntime().exec(
+					commandLine.toArray(new String[commandLine.size()]));
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					process.getInputStream()),
+					ACRAConstants.DEFAULT_BUFFER_SIZE_IN_BYTES);
 
-            while (true) {
-                final String line = bufferedReader.readLine();
-                if (line == null) {
-                    break;
-                }
-                meminfo.append(line);
-                meminfo.append("\n");
-            }
+			while (true) {
+				final String line = bufferedReader.readLine();
+				if (line == null) {
+					break;
+				}
+				meminfo.append(line);
+				meminfo.append("\n");
+			}
 
-        } catch (IOException e) {
-            ACRA.log.e(LOG_TAG, "DumpSysCollector.meminfo could not retrieve data", e);
+		} catch (IOException e) {
+			ACRA.log.e(LOG_TAG,
+					"DumpSysCollector.meminfo could not retrieve data", e);
 		}
 
-        CollectorUtil.safeClose(bufferedReader);
+		CollectorUtil.safeClose(bufferedReader);
 
-        return meminfo.toString();
-    }
+		return meminfo.toString();
+	}
 }

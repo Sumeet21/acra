@@ -17,9 +17,9 @@ package org.acra.sender;
 
 import org.acra.ACRA;
 import org.acra.ACRAConstants;
-import org.acra.collector.CrashReportData;
 import org.acra.ReportField;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.collector.CrashReportData;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,43 +28,46 @@ import android.net.Uri;
 /**
  * Send reports through an email intent. The user will be asked to chose his
  * preferred email client. Included report fields can be defined using
- * {@link org.acra.annotation.ReportsCrashes#customReportContent()}. Crash receiving mailbox has to be
- * defined with {@link ReportsCrashes#mailTo()}.
+ * {@link org.acra.annotation.ReportsCrashes#customReportContent()}. Crash
+ * receiving mailbox has to be defined with {@link ReportsCrashes#mailTo()}.
  */
 public class EmailIntentSender implements ReportSender {
 
-    private final Context mContext;
+	private final Context mContext;
 
-    public EmailIntentSender(Context ctx) {
-        mContext = ctx;
-    }
+	public EmailIntentSender(Context ctx) {
+		mContext = ctx;
+	}
 
-    @Override
-    public void send(Context context, CrashReportData errorContent) throws ReportSenderException {
+	@Override
+	public void send(Context context, CrashReportData errorContent)
+			throws ReportSenderException {
 
-        final String subject = mContext.getPackageName() + " Crash Report";
-        final String body = buildBody(errorContent);
+		final String subject = mContext.getPackageName() + " Crash Report";
+		final String body = buildBody(errorContent);
 
-        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.fromParts("mailto", ACRA.getConfig().mailTo(), null));
-        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-        mContext.startActivity(emailIntent);
-    }
+		final Intent emailIntent = new Intent(
+				android.content.Intent.ACTION_SENDTO);
+		emailIntent.setData(Uri.fromParts("mailto", ACRA.getConfig().mailTo(),
+				null));
+		emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+		mContext.startActivity(emailIntent);
+	}
 
-    private String buildBody(CrashReportData errorContent) {
-        ReportField[] fields = ACRA.getConfig().customReportContent();
-        if(fields.length == 0) {
-            fields = ACRAConstants.DEFAULT_MAIL_REPORT_FIELDS;
-        }
+	private String buildBody(CrashReportData errorContent) {
+		ReportField[] fields = ACRA.getConfig().customReportContent();
+		if (fields.length == 0) {
+			fields = ACRAConstants.DEFAULT_MAIL_REPORT_FIELDS;
+		}
 
-        final StringBuilder builder = new StringBuilder();
-        for (ReportField field : fields) {
-            builder.append(field.toString()).append("=");
-            builder.append(errorContent.get(field));
-            builder.append('\n');
-        }
-        return builder.toString();
-    }
+		final StringBuilder builder = new StringBuilder();
+		for (ReportField field : fields) {
+			builder.append(field.toString()).append("=");
+			builder.append(errorContent.get(field));
+			builder.append('\n');
+		}
+		return builder.toString();
+	}
 }
